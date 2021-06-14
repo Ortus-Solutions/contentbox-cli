@@ -1,0 +1,39 @@
+{
+    "name":"ContentBox CLI",
+    "version":"1.0.0",
+    "location":"https://downloads.ortussolutions.com/ortussolutions/commandbox-modules/contentbox-cli/@build.version@/contentbox-cli-@build.version@.zip",
+    "slug":"contentbox-cli",
+    "author":"Ortus Solutions, Corp",
+    "homepage":"https://www.ortussolutions.com",
+    "documentation":"https://contentbox.ortusbooks.com",
+    "repository":{
+        "type":"git",
+        "url":"https://github.com/Ortus-Solutions/contentbox-cli"
+    },
+    "bugs":"https://github.com/Ortus-Solutions/contentbox-cli/issues",
+    "shortDescription":"The official CLI for the ContentBox Modular CMS",
+    "type":"commandbox-modules",
+    "keywords":"contentbox,cli,cms,headless cms",
+    "license":[
+        {
+            "type":"Apache2",
+            "url":"http://www.apache.org/licenses/LICENSE-2.0"
+        }
+    ],
+    "contributors":[
+        "Brad Wood (brad@bradwood.com)"
+    ],
+	"devDependencies":{
+        "commandbox-docbox":"*"
+    },
+    "dependencies":{
+    },
+    "installPaths":{
+    },
+    "scripts":{
+        "release":"recipe build/release.boxr",
+        "format":"cfformat run commands,build,ModuleConfig.cfc --overwrite",
+        "format:watch":"cfformat watch commands,build,ModuleConfig.cfc",
+        "format:check":"cfformat check commands,build,ModuleConfig.cfc"
+    }
+}
