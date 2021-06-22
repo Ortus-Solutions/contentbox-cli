@@ -61,8 +61,8 @@
 
 		// Install the installer
 		print.blueLine( "Starting to install ContentBox..." ).line().toConsole();
-		//command( "install contentbox-installer@5.0.0-rc-snapshot" )
-		//	.run();
+		command( "install contentbox-installer@5.0.0-rc-snapshot" )
+			.run();
 
 		// Remove the dsn creator
 		var appCFC = fileRead( installDir & "/Application.cfc" );
@@ -84,7 +84,9 @@
 			appCFC,
 			"utf-8"
 		);
-		//directoryDelete( installDir & "/modules/contentbox-dsncreator", true );
+		if ( directoryExists( installDir & "/modules/contentbox-dsncreator" ) ) {
+			directoryDelete( installDir & "/modules/contentbox-dsncreator", true );
+		}
 
 		// Seed the right CFML Engine
 		print.blueLine( "Starting to seed the chosen CFML Engine..." ).line().toConsole();
