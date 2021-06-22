@@ -15,6 +15,7 @@
 	static {
 		engines = [ "lucee@5", "adobe@2016", "adobe@2018", "adobe@2021" ];
 		databases = [ "HyperSonicSQL", "MySQL5", "MySQL8", "MicrosoftSQL", "PostgreSQL", "Oracle" ];
+		hypersonicSlug = "6DD4728A-AB0C-4F67-9DCE1A91A8ACD114";
 	};
 
 	/**
@@ -29,8 +30,8 @@
 	 * @databaseType.optionsUDF completeDatabases
 	 * @databaseHost The database host to use, leave empty to use localhost
 	 * @databasePort The database port to use, leave empty to default by database type
-	 * @databaseUsername The database username to use for the datasource
-	 * @databasePassword The database password to use for the datasource
+	 * @databaseUsername The database username to use for the datasource. Use sa if using Hypersonic
+	 * @databasePassword The database password to use for the datasource. Use an empty password if using Hypersonic
 	 * @databaseName The database name to use for the datasource
 	 **/
 	function run(
@@ -153,12 +154,16 @@
 
 		switch( arguments.databaseType ){
 			case "HyperSonicSQL" : {
+				env = replaceNoCase( env, "DB_USER=#arguments.databaseUsername#", "DB_USER=sa" );
+				env = replaceNoCase( env, "DB_PASSWORD=#arguments.databasePassword#", "DB_PASSWORD=" );
 				env = replaceNoCase( env, "ORM_DIALECT=", "ORM_DIALECT=org.hibernate.dialect.MySQL5InnoDBDialect" );
-				env = replaceNoCase( env, "DB_DRIVER=", "DB_DRIVER=MySQL" );
-				env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=" );
-				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=" );
-				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=" );
-				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=" );
+				env = replaceNoCase( env, "DB_DRIVER=", "DB_DRIVER=hsqldb" );
+				env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=org.hsqldb.jdbcDriver" );
+				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=org.hsqldb.hsqldb" );
+				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=2.4.0" );
+				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:hsqldb:file:contentboxDB/#arguments.databasename#" );
+				// Setup the jdbc extension
+				command( "server set jvm.args='-Dlucee-extensions=6DD4728A-AB0C-4F67-9DCE1A91A8ACD114'" );
 				break;
 			}
 			case "MySQL5" : {
