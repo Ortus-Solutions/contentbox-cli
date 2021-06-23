@@ -33,6 +33,8 @@
 	 * @databaseUsername The database username to use for the datasource. Use sa if using Hypersonic
 	 * @databasePassword The database password to use for the datasource. Use an empty password if using Hypersonic
 	 * @databaseName The database name to use for the datasource
+	 * @production Are we installing for development or production, default is for development
+	 * @verbose Output much more verbose information about the installation process
 	 **/
 	function run(
 		required name,
@@ -44,7 +46,9 @@
 		databasePort="",
 		required databaseUsername,
 		required databasePassword,
-		databaseName = "contentbox"
+		databaseName = "contentbox",
+		boolean production = false,
+		boolean verbose = false
 	){
 		var installDir = getCWD();
 
@@ -62,10 +66,11 @@
 
 		// Install the installer
 		print.blueLine( "Starting to install ContentBox..." ).line().toConsole();
-		command( "install contentbox-installer@5.0.0-rc-snapshot" )
+		command( "install" )
+			.params( id = "contentbox-installer@5.0.0-rc-snapshot", production = arguments.production, verbose = arguments.verbose  )
 			.run();
 
-		// Remove the dsn creator
+		// Remove the dsn creator, we don't need it in commandbox mode
 		var appCFC = fileRead( installDir & "/Application.cfc" );
 		appCFC = replaceNoCase(
 			appCFC,
@@ -102,9 +107,6 @@
 		createEnvironment( argumentCollection = arguments );
 		print.greenLine( "√ ContentBox Environment Configured!" ).line().toConsole();
 
-		// Reload the shell
-		//command( "reload" ).run();
-
 		// Ask for startup
 		print.greenLine( "ContentBox has been installed and configured. We will now verify your database credentials, install the migrations and then we can continue running the server." )
 			.redBoldLine( "Make sure your database (#arguments.databaseName#) has been created!" )
@@ -139,11 +141,15 @@
 		required databaseUsername,
 		required databasePassword,
 		required databaseName,
-		required installDir
+		required installDir,
+		required production
 	){
 		var env = fileRead( variables.settings.templatesPath & "/.env.template" );
 
 		env = replaceNoCase( env, "APPNAME=", "APPNAME=#arguments.name#" );
+		if( arguments.production ){
+			env = replaceNoCase( env, "ENVIRONMENT=development", "ENVIRONMENT=production" );
+		}
 		env = replaceNoCase( env, "CFCONFIG_ADMINPASSWORD=", "CFCONFIG_ADMINPASSWORD=#arguments.cfmlPassword#" );
 		env = replaceNoCase( env, "COLDBOX_REINITPASSWORD=", "COLDBOX_REINITPASSWORD=#arguments.coldboxPassword#" );
 		env = replaceNoCase( env, "DB_HOST=", "DB_HOST=#arguments.databaseHost#" );
