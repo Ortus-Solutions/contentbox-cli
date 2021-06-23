@@ -69,7 +69,7 @@
 		// Install the installer
 		print.blueLine( "Starting to install ContentBox..." ).line().toConsole();
 		command( "install" )
-			.params( id = "contentbox-installer@5.0.0-rc-snapshot", production = arguments.production, verbose = arguments.verbose  )
+			.params( id = "contentbox-installer@5.0.0-rc", production = arguments.production, verbose = arguments.verbose  )
 			.run();
 
 		// Remove the dsn creator, we don't need it in commandbox mode
