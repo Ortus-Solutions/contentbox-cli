@@ -1,6 +1,8 @@
 /**
- * A CLI based ContentBox installer. This is an automated approac to installing ContentBox.
- * If you want a wizard like setup then use the `install-wizard` command.
+ * A CLI based ContentBox installer. This is an automated approach to installing ContentBox.
+ * The supported CFML Engines are "lucee@5", "adobe@2016", "adobe@2018", "adobe@2021"
+ * The supported Databases are: "HyperSonicSQL (Lucee Only)", "MySQL5", "MySQL8", "MicrosoftSQL", "PostgreSQL", "Oracle"
+ *
  * .
  * {code:bash}
  * contentbox install name=MySite cfmlEngine=lucee@5 database=mysql username=root password=password
