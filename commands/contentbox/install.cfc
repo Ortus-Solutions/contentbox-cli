@@ -201,7 +201,7 @@
 				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=com.mysql.cj" );
 				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=8.0.24" );
 				env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=com.mysql.cj.jdbc.Driver" );
-				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:mysql://#arguments.databaseHost#:#arguments.databasePort#/#arguments.databaseName#?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=true" );
+				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:mysql://#arguments.databaseHost#:#arguments.databasePort#/#arguments.databaseName#?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=true" );
 				break;
 			}
 			case "MicrosoftSQL" : {
