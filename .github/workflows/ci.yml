@@ -1,4 +1,4 @@
-name: Module CI
+name: ContentBox-CLI CI
 
 # Only on Development we build snapshots
 on:
