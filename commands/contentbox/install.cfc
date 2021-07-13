@@ -1,5 +1,8 @@
 /**
  * A CLI based ContentBox installer. This is an automated approach to installing ContentBox.
+ *
+ * This command is meant to be ran and not expecting user feedback.
+ *
  * The supported CFML Engines are "lucee@5", "adobe@2016", "adobe@2018", "adobe@2021"
  * The supported Databases are: "HyperSonicSQL (Lucee Only)", "MySQL5", "MySQL8", "MicrosoftSQL", "PostgreSQL", "Oracle"
  *
@@ -115,15 +118,14 @@
 			.redBoldLine( "If this process fails, then your database credentials are not correct.  Verify them and make sure they match the ones in the (.env) file we created." );
 
 		// Confirm migrations
-		waitForKey( "Press any key to continue to install the migrations?" );
 		print.line().blueLine( "Please wait while we install your migrations table..." ).toConsole();
+		sleep( 1000 );
 		command( "migrate install" ).run();
 
 		// Confirm starting up the server
-		waitForKey( "Press any key to startup your server and you can continue with the web setup portions..." );
 		print.line().blueLine( "Please wait while we startup your server..." ).toConsole();
 		command( "server start" ).run();
-		sleep( 2000 );
+		sleep( 3000 );
 		print.greenLine( "√ ContentBox server started, check out the details below:" );
 		command( "server info" ).run();
 		print.greenLine( "√ ContentBox CLI Install Wizard is done, enjoy your ContentBox!" );
