@@ -24,16 +24,16 @@ You can use the cli for many thing like installing ContentBox, creating widgets,
 
 ### Installing ContentBox
 
-We have created the `install` command so you can easily install ContentBox on any OS, using any supported CFML engine and supported database.  Here are the supported engines and databases:
+We have created the `install` and the `install-wizard` commands so you can easily install ContentBox on any OS, using any supported CFML engine and supported database.  Here are the supported engines and databases:
 
-**Suported CFML Engines**
+#### Suported CFML Engines
 
 - Lucee 5+
 - _Adobe 2016 (End of life December 2021)_
 - Adobe 2018
 - Adobe 2021
 
-**Supported Databases**
+#### Supported Databases
 
 - Hypersonic SQL
 - MySQL 5.7
@@ -44,7 +44,7 @@ We have created the `install` command so you can easily install ContentBox on an
 
 #### Pre-Requisites
 
-Before using the `install` command you must do two things:
+Before using the commands you must do two things:
 
 1. Create an empty directory with a name of your choice, and startup the CommandBox shell inside of it.
 2. Create an empty database in your RDBMS of your choice and make sure you have the connection credentials handy.
@@ -54,6 +54,18 @@ Before using the `install` command you must do two things:
 box
 # Create and move into the directory where we will install your site
 mkdir --cd mySite
+```
+
+#### Install vs Install Wizard
+
+The `install` command is meant to be used without user interactivity. It is great for automation and setting up ContentBox sites with no user input.  The `install-wizard` command is meant to be used as a wizard that will guide you through the installation process.
+
+```bash
+# Automated install
+contentbox install name="MySite" databaseType="MySQL8" databaseUsername="root" databasePassword="mysql"
+
+# Wizard install
+contentbox install-wizard
 ```
 
 #### Installation Arguments
