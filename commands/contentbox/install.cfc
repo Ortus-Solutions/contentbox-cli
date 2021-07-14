@@ -75,13 +75,6 @@
 			.params( id = "contentbox-installer@5.0.0-rc", production = arguments.production, verbose = arguments.verbose  )
 			.run();
 
-		// Remove the dsn creator, we don't need it in commandbox mode
-		var appCFC = fileRead( installDir & "/Application.cfc" );
-		appCFC = replaceNoCase(
-			appCFC,
-			'include "modules/contentbox-installer/includes/dsn_relocation.cfm";',
-			'//include "modules/contentbox-installer/includes/dsn_relocation.cfm";'
-		);
 		// MySQL 8 Bug on Lucee
 		if( arguments.cfmlEngine.findNoCase( "lucee" ) && arguments.databaseType == "MySQL8" ){
 			appCFC = replaceNoCase(
@@ -95,9 +88,6 @@
 			appCFC,
 			"utf-8"
 		);
-		if ( directoryExists( installDir & "/modules/contentbox-dsncreator" ) ) {
-			directoryDelete( installDir & "/modules/contentbox-dsncreator", true );
-		}
 
 		// Seed the right CFML Engine
 		print.blueLine( "Starting to seed the chosen CFML Engine..." ).line().toConsole();
