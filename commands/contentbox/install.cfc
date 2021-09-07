@@ -77,20 +77,22 @@
 
 		// MySQL 8 Bug on Lucee
 		if( arguments.cfmlEngine.findNoCase( "lucee" ) && arguments.databaseType == "MySQL8" ){
-			appCFC = replaceNoCase(
-				appCFC,
+			print.blueLine( "Lucee and MySQL 8 detected, updating Application.cfc due to Lucee ORM DDL Bug..." ).line().toConsole();
+			var appCFC = replaceNoCase(
+				fileRead( installDir & "/Application.cfc", "utf-8" ),
 				'"update"',
 				'"dropcreate"'
 			);
+			fileWrite(
+				installDir & "/Application.cfc",
+				appCFC,
+				"utf-8"
+			);
+			print.greenLine( "√ Updated Application.cfc with dropcreate for MySQL 8 for initial startup." ).line().toConsole();
 		}
-		fileWrite(
-			installDir & "/Application.cfc",
-			appCFC,
-			"utf-8"
-		);
 
 		// Seed the right CFML Engine
-		print.blueLine( "Starting to seed the chosen CFML Engine..." ).line().toConsole();
+		print.blueLine( "Starting to seed the chosen CFML Engine to the server.json..." ).line().toConsole();
 		command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
 		command( "server set name='#arguments.name#'" ).run();
 		command( "server set openBrowser=true" ).run();

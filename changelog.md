@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
-## [v1.0.0] => 2021-JUN-
+## [v1.0.0] => 2021-SEP-07
 
 * Initial creation of separate CommandBox project
+
+### Fixed
+
+* `appcfc` missing variable when updating lucee + mysql 8 bug for ddl creation.
