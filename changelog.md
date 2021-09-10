@@ -13,4 +13,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+* Mispelling on database port for microsoft sql server.
 * `appcfc` missing variable when updating lucee + mysql 8 bug for ddl creation.

@@ -208,7 +208,7 @@
 				env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=com.microsoft.sqlserver.jdbc.SQLServerDriver" );
 				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=mssqljdbc4" );
 				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=4.0.2206.100" );
-				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:sqlserver://#arguments.databaseHost#:#arguments.databsePort#;DATABASENAME=#arguments.databaseName#;sendStringParametersAsUnicode=true;SelectMethod=direct" );
+				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:sqlserver://#arguments.databaseHost#:#arguments.databasePort#;DATABASENAME=#arguments.databaseName#;sendStringParametersAsUnicode=true;SelectMethod=direct" );
 				break;
 			}
 			case "PostgreSQL" : {
