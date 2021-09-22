@@ -36,10 +36,10 @@ component {
 		} );
 
 		// Create Project Dependency Mappings
-		//fileSystemUtil.createMapping(
+		// fileSystemUtil.createMapping(
 		//	"contentbox-cli",
 		//	variables.cwd
-		//);
+		// );
 
 		return this;
 	}
@@ -111,7 +111,8 @@ component {
 		branch  = "development"
 	){
 		// Build Notice ID
-		print.line()
+		print
+			.line()
 			.boldMagentaLine(
 				"+ Building #arguments.projectName# v#arguments.version#+#arguments.buildID# from #cwd# using the #arguments.branch# branch."
 			)
@@ -194,7 +195,7 @@ component {
 		command( "docbox generate" )
 			.params(
 				"source"                = "commands",
-				"excludes"				= "",
+				"excludes"              = "",
 				"mapping"               = "contentbox-cli",
 				"strategy-projectTitle" = "#arguments.projectName# v#arguments.version#",
 				"strategy-outputDir"    = arguments.outputDir
@@ -229,7 +230,8 @@ component {
 			fileRead( variables.cwd & "changelog.md" ).split( "----" )[ 2 ].trim() & chr( 13 ) & chr( 10 )
 		);
 
-		print.greenBoldLine( "  √ Latest changelog file created at `changelog-latest.md`" )
+		print
+			.greenBoldLine( "  √ Latest changelog file created at `changelog-latest.md`" )
 			.line()
 			.line( fileRead( variables.cwd & "changelog-latest.md" ) );
 	}

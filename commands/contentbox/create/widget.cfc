@@ -6,7 +6,7 @@ component {
 	/**
 	 *
 	 **/
-	function run(  ) {
+	function run(){
 		print.line( "Command not implemented!" );
 	}
 

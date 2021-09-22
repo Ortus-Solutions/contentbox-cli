@@ -12,15 +12,28 @@
  * {code}
  *
  **/
- component {
+component {
 
 	// DI
 	property name="settings" inject="box:modulesettings:contentbox-cli";
 
 	static {
-		engines = [ "lucee@5", "adobe@2016", "adobe@2018", "adobe@2021" ];
-		databases = [ "HyperSonicSQL", "MySQL5", "MySQL8", "MicrosoftSQL", "PostgreSQL", "Oracle" ];
-		hypersonicSlug = "6DD4728A-AB0C-4F67-9DCE1A91A8ACD114";
+		engines = [
+			"lucee@5",
+			"adobe@2016",
+			"adobe@2018",
+			"adobe@2021"
+		];
+		databases = [
+			"HyperSonicSQL",
+			"MySQL5",
+			"MySQL8",
+			"MicrosoftSQL",
+			"PostgreSQL",
+			"Oracle"
+		];
+		hypersonicSlug    = "6DD4728A-AB0C-4F67-9DCE1A91A8ACD114";
+		contentboxVersion = "5";
 	};
 
 	/**
@@ -43,84 +56,133 @@
 	 **/
 	function run(
 		required name,
-		cfmlEngine = "lucee@5",
-		cfmlPassword = "contentbox",
+		cfmlEngine      = "lucee@5",
+		cfmlPassword    = "contentbox",
 		coldboxPassword = "contentbox",
 		required databaseType,
 		databaseHost = "localhost",
-		databasePort="",
+		databasePort = "",
 		required databaseUsername,
 		required databasePassword,
-		databaseName = "contentbox",
+		databaseName       = "contentbox",
 		boolean production = false,
-		boolean verbose = false
+		boolean verbose    = false,
+		contentboxVersion  = static.contentboxVersion
 	){
 		var installDir = getCWD();
 
 		// Verify Engines
-		if( !arrayFindNoCase( static.engines, arguments.cfmlEngine ) ){
-			error( "The cfml engine passed (#arguments.cfmlengine#) is not valid. Valid choices are #static.engines.toString()#" );
+		if ( !arrayFindNoCase( static.engines, arguments.cfmlEngine ) ) {
+			error(
+				"The cfml engine passed (#arguments.cfmlengine#) is not valid. Valid choices are #static.engines.toString()#"
+			);
 			return;
 		}
 
 		// Verify Databases
-		if( !arrayFindNoCase( static.databases, arguments.databaseType ) ){
-			error( "The database passed (#arguments.databaseType#) is not valid. Valid choices are #static.databases.toString()#" );
+		if (
+			!arrayFindNoCase(
+				static.databases,
+				arguments.databaseType
+			)
+		) {
+			error(
+				"The database passed (#arguments.databaseType#) is not valid. Valid choices are #static.databases.toString()#"
+			);
 			return;
 		}
 
 		// Install the installer
-		print.blueLine( "Starting to install ContentBox..." ).line().toConsole();
+		variables.print
+			.blueLine( "Starting to install ContentBox..." )
+			.line()
+			.toConsole();
 		command( "install" )
-			.params( id = "contentbox-installer@5.0.0-rc", production = arguments.production, verbose = arguments.verbose  )
+			.params(
+				id         = "contentbox-installer@#arguments.contentboxVersion#",
+				production = arguments.production,
+				verbose    = arguments.verbose
+			)
 			.run();
 
 		// MySQL 8 Bug on Lucee
-		if( arguments.cfmlEngine.findNoCase( "lucee" ) && arguments.databaseType == "MySQL8" ){
-			print.blueLine( "Lucee and MySQL 8 detected, updating Application.cfc due to Lucee ORM DDL Bug..." ).line().toConsole();
+		if ( arguments.cfmlEngine.findNoCase( "lucee" ) && arguments.databaseType == "MySQL8" ) {
+			variables.print
+				.blueLine( "Lucee and MySQL 8 detected, updating Application.cfc due to Lucee ORM DDL Bug..." )
+				.line()
+				.toConsole();
 			var appCFC = replaceNoCase(
-				fileRead( installDir & "/Application.cfc", "utf-8" ),
-				'"update"',
-				'"dropcreate"'
+				fileRead(
+					installDir & "/Application.cfc",
+					"utf-8"
+				),
+				"""update""",
+				"""dropcreate"""
 			);
 			fileWrite(
 				installDir & "/Application.cfc",
 				appCFC,
 				"utf-8"
 			);
-			print.greenLine( "√ Updated Application.cfc with dropcreate for MySQL 8 for initial startup." ).line().toConsole();
+			variables.print
+				.greenLine( "√ Updated Application.cfc with dropcreate for MySQL 8 for initial startup." )
+				.line()
+				.toConsole();
 		}
 
 		// Seed the right CFML Engine
-		print.blueLine( "Starting to seed the chosen CFML Engine to the server.json..." ).line().toConsole();
+		variables.print
+			.blueLine( "Starting to seed the chosen CFML Engine to the server.json..." )
+			.line()
+			.toConsole();
 		command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
 		command( "server set name='#arguments.name#'" ).run();
 		command( "server set openBrowser=true" ).run();
-		print.greenLine( "√ CFML Engine Configured!" ).line().toConsole();
+		variables.print
+			.greenLine( "√ CFML Engine Configured!" )
+			.line()
+			.toConsole();
 
 		// Create the .env
-		print.blueLine( "Starting to seed the ContentBox runtime environment..." ).line().toConsole();
+		variables.print
+			.blueLine( "Starting to seed the ContentBox runtime environment..." )
+			.line()
+			.toConsole();
 		arguments.installDir = installDir;
 		createEnvironment( argumentCollection = arguments );
-		print.greenLine( "√ ContentBox Environment Configured!" ).line().toConsole();
+		variables.print
+			.greenLine( "√ ContentBox Environment Configured!" )
+			.line()
+			.toConsole();
 
 		// Ask for startup
-		print.greenLine( "ContentBox has been installed and configured. We will now verify your database credentials, install the migrations and then we can continue running the server." )
+		variables.print
+			.greenLine(
+				"ContentBox has been installed and configured. We will now verify your database credentials, install the migrations and then we can continue running the server."
+			)
 			.redBoldLine( "Make sure your database (#arguments.databaseName#) has been created!" )
-			.redBoldLine( "If this process fails, then your database credentials are not correct.  Verify them and make sure they match the ones in the (.env) file we created." );
+			.redBoldLine(
+				"If this process fails, then your database credentials are not correct.  Verify them and make sure they match the ones in the (.env) file we created."
+			);
 
 		// Confirm migrations
-		print.line().blueLine( "Please wait while we install your migrations table..." ).toConsole();
+		variables.print
+			.line()
+			.blueLine( "Please wait while we install your migrations table..." )
+			.toConsole();
 		sleep( 1000 );
 		command( "migrate install" ).run();
 
 		// Confirm starting up the server
-		print.line().blueLine( "Please wait while we startup your server..." ).toConsole();
+		variables.print
+			.line()
+			.blueLine( "Please wait while we startup your server..." )
+			.toConsole();
 		command( "server start" ).run();
 		sleep( 3000 );
-		print.greenLine( "√ ContentBox server started, check out the details below:" );
+		variables.print.greenLine( "√ ContentBox server started, check out the details below:" );
 		command( "server info" ).run();
-		print.greenLine( "√ ContentBox CLI Install Wizard is done, enjoy your ContentBox!" );
+		variables.print.greenLine( "√ ContentBox CLI Install Wizard is done, enjoy your ContentBox!" );
 	}
 
 	/**
@@ -142,101 +204,297 @@
 	){
 		var env = fileRead( variables.settings.templatesPath & "/.env.template" );
 
-		env = replaceNoCase( env, "APPNAME=", "APPNAME=#arguments.name#" );
-		if( arguments.production ){
-			env = replaceNoCase( env, "ENVIRONMENT=development", "ENVIRONMENT=production" );
+		env = replaceNoCase(
+			env,
+			"APPNAME=",
+			"APPNAME=#arguments.name#"
+		);
+		if ( arguments.production ) {
+			env = replaceNoCase(
+				env,
+				"ENVIRONMENT=development",
+				"ENVIRONMENT=production"
+			);
 		}
-		env = replaceNoCase( env, "CFCONFIG_ADMINPASSWORD=", "CFCONFIG_ADMINPASSWORD=#arguments.cfmlPassword#" );
-		env = replaceNoCase( env, "COLDBOX_REINITPASSWORD=", "COLDBOX_REINITPASSWORD=#arguments.coldboxPassword#" );
-		env = replaceNoCase( env, "DB_HOST=", "DB_HOST=#arguments.databaseHost#" );
-		env = replaceNoCase( env, "DB_DATABASE=", "DB_DATABASE=#arguments.databaseName#" );
-		env = replaceNoCase( env, "DB_USER=", "DB_USER=#arguments.databaseUsername#" );
-		env = replaceNoCase( env, "DB_PASSWORD=", "DB_PASSWORD=#arguments.databasePassword#" );
-		env = replaceNoCase( env, "JWT_SECRET=", "JWT_SECRET=#generateSecretKey( "blowfish", 256 )#" );
+		env = replaceNoCase(
+			env,
+			"CFCONFIG_ADMINPASSWORD=",
+			"CFCONFIG_ADMINPASSWORD=#arguments.cfmlPassword#"
+		);
+		env = replaceNoCase(
+			env,
+			"COLDBOX_REINITPASSWORD=",
+			"COLDBOX_REINITPASSWORD=#arguments.coldboxPassword#"
+		);
+		env = replaceNoCase(
+			env,
+			"DB_HOST=",
+			"DB_HOST=#arguments.databaseHost#"
+		);
+		env = replaceNoCase(
+			env,
+			"DB_DATABASE=",
+			"DB_DATABASE=#arguments.databaseName#"
+		);
+		env = replaceNoCase(
+			env,
+			"DB_USER=",
+			"DB_USER=#arguments.databaseUsername#"
+		);
+		env = replaceNoCase(
+			env,
+			"DB_PASSWORD=",
+			"DB_PASSWORD=#arguments.databasePassword#"
+		);
+		env = replaceNoCase(
+			env,
+			"JWT_SECRET=",
+			"JWT_SECRET=#generateSecretKey( "blowfish", 256 )#"
+		);
 
-		switch( arguments.databaseType ){
-			case "HyperSonicSQL" : {
-				env = replaceNoCase( env, "DB_USER=#arguments.databaseUsername#", "DB_USER=sa" );
-				env = replaceNoCase( env, "DB_PASSWORD=#arguments.databasePassword#", "DB_PASSWORD=" );
-				env = replaceNoCase( env, "ORM_DIALECT=", "ORM_DIALECT=org.hibernate.dialect.MySQL5InnoDBDialect" );
-				env = replaceNoCase( env, "DB_DRIVER=", "DB_DRIVER=hsqldb" );
-				env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=org.hsqldb.jdbcDriver" );
-				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=org.hsqldb.hsqldb" );
-				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=2.4.0" );
-				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:hsqldb:file:contentboxDB/#arguments.databasename#" );
+		switch ( arguments.databaseType ) {
+			case "HyperSonicSQL": {
+				env = replaceNoCase(
+					env,
+					"DB_USER=#arguments.databaseUsername#",
+					"DB_USER=sa"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_PASSWORD=#arguments.databasePassword#",
+					"DB_PASSWORD="
+				);
+				env = replaceNoCase(
+					env,
+					"ORM_DIALECT=",
+					"ORM_DIALECT=org.hibernate.dialect.MySQL5InnoDBDialect"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_DRIVER=",
+					"DB_DRIVER=hsqldb"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_CLASS=",
+					"DB_CLASS=org.hsqldb.jdbcDriver"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLENAME=",
+					"DB_BUNDLENAME=org.hsqldb.hsqldb"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLEVERSION=",
+					"DB_BUNDLEVERSION=2.4.0"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_CONNECTIONSTRING=",
+					"DB_CONNECTIONSTRING=jdbc:hsqldb:file:contentboxDB/#arguments.databasename#"
+				);
 				// Setup the jdbc extension
 				command( "server set jvm.args='-Dlucee-extensions=6DD4728A-AB0C-4F67-9DCE1A91A8ACD114'" );
 				break;
 			}
-			case "MySQL5" : {
-				if( !len( arguments.databasePort ) ){
+			case "MySQL5": {
+				if ( !len( arguments.databasePort ) ) {
 					arguments.databasePort = 3306;
 				}
-				env = replaceNoCase( env, "ORM_DIALECT=", "ORM_DIALECT=org.hibernate.dialect.MySQL5InnoDBDialect" );
+				env = replaceNoCase(
+					env,
+					"ORM_DIALECT=",
+					"ORM_DIALECT=org.hibernate.dialect.MySQL5InnoDBDialect"
+				);
 				env = replaceNoCase( env, "DB_DRIVER=", "DB_DRIVER=MySQL" );
-				env = replaceNoCase( env, "DB_PORT=", "DB_PORT=#arguments.databasePort#" );
-				if( findNoCase( "adobe", arguments.cfmlEngine ) ){
-					env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=com.mysql.cj.jdbc.Driver" );
+				env = replaceNoCase(
+					env,
+					"DB_PORT=",
+					"DB_PORT=#arguments.databasePort#"
+				);
+				if ( findNoCase( "adobe", arguments.cfmlEngine ) ) {
+					env = replaceNoCase(
+						env,
+						"DB_CLASS=",
+						"DB_CLASS=com.mysql.cj.jdbc.Driver"
+					);
 				} else {
-					env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=com.mysql.jdbc.Driver" );
+					env = replaceNoCase(
+						env,
+						"DB_CLASS=",
+						"DB_CLASS=com.mysql.jdbc.Driver"
+					);
 				}
-				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=com.mysql.jdbc" );
-				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=5.1.40" );
-				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:mysql://#arguments.databaseHost#:#arguments.databasePort#/#arguments.databaseName#?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=true" );
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLENAME=",
+					"DB_BUNDLENAME=com.mysql.jdbc"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLEVERSION=",
+					"DB_BUNDLEVERSION=5.1.40"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_CONNECTIONSTRING=",
+					"DB_CONNECTIONSTRING=jdbc:mysql://#arguments.databaseHost#:#arguments.databasePort#/#arguments.databaseName#?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=true"
+				);
 				break;
 			}
-			case "MySQL8" : {
-				if( !len( arguments.databasePort ) ){
+			case "MySQL8": {
+				if ( !len( arguments.databasePort ) ) {
 					arguments.databasePort = 3306;
 				}
-				env = replaceNoCase( env, "DB_PORT=", "DB_PORT=#arguments.databasePort#" );
-				env = replaceNoCase( env, "ORM_DIALECT=", "ORM_DIALECT=org.hibernate.dialect.MySQL5InnoDBDialect" );
+				env = replaceNoCase(
+					env,
+					"DB_PORT=",
+					"DB_PORT=#arguments.databasePort#"
+				);
+				env = replaceNoCase(
+					env,
+					"ORM_DIALECT=",
+					"ORM_DIALECT=org.hibernate.dialect.MySQL5InnoDBDialect"
+				);
 				env = replaceNoCase( env, "DB_DRIVER=", "DB_DRIVER=MySQL" );
-				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=com.mysql.cj" );
-				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=8.0.24" );
-				env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=com.mysql.cj.jdbc.Driver" );
-				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:mysql://#arguments.databaseHost#:#arguments.databasePort#/#arguments.databaseName#?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=true" );
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLENAME=",
+					"DB_BUNDLENAME=com.mysql.cj"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLEVERSION=",
+					"DB_BUNDLEVERSION=8.0.24"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_CLASS=",
+					"DB_CLASS=com.mysql.cj.jdbc.Driver"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_CONNECTIONSTRING=",
+					"DB_CONNECTIONSTRING=jdbc:mysql://#arguments.databaseHost#:#arguments.databasePort#/#arguments.databaseName#?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=true"
+				);
 				break;
 			}
-			case "MicrosoftSQL" : {
-				if( !len( arguments.databasePort ) ){
+			case "MicrosoftSQL": {
+				if ( !len( arguments.databasePort ) ) {
 					arguments.databasePort = 1433;
 				}
-				env = replaceNoCase( env, "DB_PORT=", "DB_PORT=#arguments.databasePort#" );
-				env = replaceNoCase( env, "ORM_DIALECT=", "ORM_DIALECT=org.hibernate.dialect.SQLServer2008Dialect" );
+				env = replaceNoCase(
+					env,
+					"DB_PORT=",
+					"DB_PORT=#arguments.databasePort#"
+				);
+				env = replaceNoCase(
+					env,
+					"ORM_DIALECT=",
+					"ORM_DIALECT=org.hibernate.dialect.SQLServer2008Dialect"
+				);
 				env = replaceNoCase( env, "DB_DRIVER=", "DB_DRIVER=mssql" );
-				env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=com.microsoft.sqlserver.jdbc.SQLServerDriver" );
-				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=mssqljdbc4" );
-				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=4.0.2206.100" );
-				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:sqlserver://#arguments.databaseHost#:#arguments.databasePort#;DATABASENAME=#arguments.databaseName#;sendStringParametersAsUnicode=true;SelectMethod=direct" );
+				env = replaceNoCase(
+					env,
+					"DB_CLASS=",
+					"DB_CLASS=com.microsoft.sqlserver.jdbc.SQLServerDriver"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLENAME=",
+					"DB_BUNDLENAME=mssqljdbc4"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLEVERSION=",
+					"DB_BUNDLEVERSION=4.0.2206.100"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_CONNECTIONSTRING=",
+					"DB_CONNECTIONSTRING=jdbc:sqlserver://#arguments.databaseHost#:#arguments.databasePort#;DATABASENAME=#arguments.databaseName#;sendStringParametersAsUnicode=true;SelectMethod=direct"
+				);
 				break;
 			}
-			case "PostgreSQL" : {
-				if( !len( arguments.databasePort ) ){
+			case "PostgreSQL": {
+				if ( !len( arguments.databasePort ) ) {
 					arguments.databasePort = 5432;
 				}
-				env = replaceNoCase( env, "DB_PORT=", "DB_PORT=#arguments.databasePort#" );
-				env = replaceNoCase( env, "ORM_DIALECT=", "ORM_DIALECT=PostgreSQL" );
-				env = replaceNoCase( env, "DB_DRIVER=", "DB_DRIVER=PostgreSQL" );
-				env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=org.postgresql.Driver" );
-				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=org.postgresql.jdbc42" );
-				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=9.4.1212" );
-				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=jdbc:postgresql://#arguments.databaseHost#:#arguments.databasePort#/#arguments.databasename#" );
+				env = replaceNoCase(
+					env,
+					"DB_PORT=",
+					"DB_PORT=#arguments.databasePort#"
+				);
+				env = replaceNoCase(
+					env,
+					"ORM_DIALECT=",
+					"ORM_DIALECT=PostgreSQL"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_DRIVER=",
+					"DB_DRIVER=PostgreSQL"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_CLASS=",
+					"DB_CLASS=org.postgresql.Driver"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLENAME=",
+					"DB_BUNDLENAME=org.postgresql.jdbc42"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLEVERSION=",
+					"DB_BUNDLEVERSION=9.4.1212"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_CONNECTIONSTRING=",
+					"DB_CONNECTIONSTRING=jdbc:postgresql://#arguments.databaseHost#:#arguments.databasePort#/#arguments.databasename#"
+				);
 				break;
 			}
-			case "Oracle" : {
-				env = replaceNoCase( env, "ORM_DIALECT=", "ORM_DIALECT=Oracle10g" );
-				env = replaceNoCase( env, "DB_DRIVER=", "DB_DRIVER=oracle" );
+			case "Oracle": {
+				env = replaceNoCase(
+					env,
+					"ORM_DIALECT=",
+					"ORM_DIALECT=Oracle10g"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_DRIVER=",
+					"DB_DRIVER=oracle"
+				);
 				env = replaceNoCase( env, "DB_CLASS=", "DB_CLASS=" );
-				env = replaceNoCase( env, "DB_BUNDLENAME=", "DB_BUNDLENAME=com.mysql.jdbc" );
-				env = replaceNoCase( env, "DB_BUNDLEVERSION=", "DB_BUNDLEVERSION=" );
-				env = replaceNoCase( env, "DB_CONNECTIONSTRING=", "DB_CONNECTIONSTRING=" );
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLENAME=",
+					"DB_BUNDLENAME=com.mysql.jdbc"
+				);
+				env = replaceNoCase(
+					env,
+					"DB_BUNDLEVERSION=",
+					"DB_BUNDLEVERSION="
+				);
+				env = replaceNoCase(
+					env,
+					"DB_CONNECTIONSTRING=",
+					"DB_CONNECTIONSTRING="
+				);
 				break;
 			}
 		}
 
 		// Write it out
-		fileWrite( arguments.installDir & "/.env", env, "utf-8" );
+		fileWrite(
+			arguments.installDir & "/.env",
+			env,
+			"utf-8"
+		);
 	}
 
 	function completeEngines(){
