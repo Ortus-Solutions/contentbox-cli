@@ -132,7 +132,21 @@ component extends="install" {
 			] )
 			.ask();
 
-		print.blueLine( "We are ready to install ContentBox for you." );
+		args.contentboxVersion = ask(
+			"Enter the ContentBox version to use or leave empty to use the latest stable version (be = snapshot)? "
+		)
+		if ( !args.contentboxVersion.len() ) {
+			args.delete( "contentboxVersion" );
+		}
+
+		print.blueLine( "We are ready to install ContentBox for you with the following configuration: " );
+		print.table(
+			headerNames : [ "Configuration", "Value" ],
+			data = args.reduce( (results, k, v) => {
+				results.append( { configuration : k, value : ( v.len() ? v : '[default]' ) } );
+				return results;
+			}, [] )
+		);
 		if ( confirm( "Do you wish to continue? [y/n]" ) ) {
 			return super.run( argumentCollection = args );
 		} else {

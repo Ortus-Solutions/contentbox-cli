@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v1.1.0] => 2021-DEC-03
+
+### Added
+
+* Ability to input a contentbox version to install via the `install-wizard` command.
+
+----
+
 ## [v1.0.0] => 2021-SEP-07
 
 * Initial creation of separate CommandBox project
