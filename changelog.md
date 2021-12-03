@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Run initial migrations once ContentBox has been installed
 * Ability to input a contentbox version to install via the `install-wizard` command.
 
 ----
