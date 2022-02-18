@@ -137,7 +137,7 @@ component {
 			.toConsole();
 		command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
 		command( "server set name='#arguments.name#'" ).run();
-		command( "server set openBrowser=true" ).run();
+		command( "server set openBrowser=false" ).run();
 		variables.print
 			.greenLine( "√ CFML Engine Configured!" )
 			.line()
@@ -189,6 +189,21 @@ component {
 		sleep( 3000 );
 		variables.print.greenLine( "√ ContentBox server started, check out the details below:" );
 		command( "server info" ).run();
+
+		// Adobe 2021 cfpm installs
+		if ( arguments.cfmlEngine.findNoCase( "adobe@2021" ) ) {
+			variables.print
+				.line()
+				.blueLine( "Adobe 2021 detected, running cfpm installs to support ContentBox..." )
+				.toConsole();
+			command( "cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed" ).run();
+			variables.print.greenLine( "√ CFPM modules installed" );
+			sleep( 1000 );
+		}
+
+		variables.print.greenLine( "√ Opening a browser for you to continue with the web installer..." );
+		command( "server open" ).run();
+
 		variables.print.greenLine( "√ ContentBox CLI Install Wizard is done, enjoy your ContentBox!" );
 	}
 
@@ -320,19 +335,11 @@ component {
 					"DB_PORT=",
 					"DB_PORT=#arguments.databasePort#"
 				);
-				if ( findNoCase( "adobe", arguments.cfmlEngine ) ) {
-					env = replaceNoCase(
-						env,
-						"DB_CLASS=",
-						"DB_CLASS=com.mysql.cj.jdbc.Driver"
-					);
-				} else {
-					env = replaceNoCase(
-						env,
-						"DB_CLASS=",
-						"DB_CLASS=com.mysql.jdbc.Driver"
-					);
-				}
+				env = replaceNoCase(
+					env,
+					"DB_CLASS=",
+					"DB_CLASS=com.mysql.jdbc.Driver"
+				);
 				env = replaceNoCase(
 					env,
 					"DB_BUNDLENAME=",
