@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v1.2.0] => 2022-FEB-18
+
+### Added
+
+* Added Adobe 2021 support for cfpm
+
+
+----
+
 ## [v1.1.0] => 2021-DEC-03
 
 ### Added
