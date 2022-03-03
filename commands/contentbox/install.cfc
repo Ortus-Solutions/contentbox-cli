@@ -186,7 +186,7 @@ component {
 			.blueLine( "Please wait while we startup your server..." )
 			.toConsole();
 		command( "server start" ).run();
-		sleep( 3000 );
+		sleep( 5000 );
 		variables.print.greenLine( "√ ContentBox server started, check out the details below:" );
 		command( "server info" ).run();
 
@@ -198,7 +198,7 @@ component {
 				.toConsole();
 			command( "cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed" ).run();
 			variables.print.greenLine( "√ CFPM modules installed" );
-			sleep( 1000 );
+			sleep( 5000 );
 		}
 
 		variables.print.greenLine( "√ Opening a browser for you to continue with the web installer..." );
