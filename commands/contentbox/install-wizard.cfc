@@ -49,7 +49,7 @@ component extends="install" {
 			.ask();
 
 		args.cfmlPassword = ask(
-			"Enter the password for the CFML Engine administrator (Leave empty to use 'contentbox')? "
+			"Enter the password for the CFML Engine administrator (Leave empty to use 'contentbox', only if deployed on CommandBox)? "
 		);
 		if ( !args.cfmlPassword.len() ) {
 			args.cfmlPassword = "contentbox";
@@ -117,6 +117,18 @@ component extends="install" {
 			args.databaseName = "contentbox";
 		}
 
+		args.deployServer = multiSelect()
+			.setQuestion( "Do you want us to deploy and start a CFML Engine (#args.cfmlEngine#) on CommandBox for you? " )
+			.setOptions( [
+				{
+					display  : "Yes",
+					value    : true,
+					selected : true
+				},
+				{ display : "False", value : false }
+			] )
+			.ask();
+
 		args.production = multiSelect()
 			.setQuestion( "Is this a development or production site? " )
 			.setOptions( [
@@ -141,9 +153,12 @@ component extends="install" {
 
 		print.blueLine( "We are ready to install ContentBox for you with the following configuration: " );
 		print.table(
-			headerNames : [ "Configuration", "Value" ],
-			data = args.reduce( (results, k, v) => {
-				results.append( { configuration : k, value : ( v.len() ? v : '[default]' ) } );
+			headerNames: [ "Configuration", "Value" ],
+			data       = args.reduce( ( results, k, v ) => {
+				results.append( {
+					configuration : k,
+					value         : ( v.len() ? v : "[default]" )
+				} );
 				return results;
 			}, [] )
 		);

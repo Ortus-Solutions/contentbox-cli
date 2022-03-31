@@ -37,7 +37,7 @@ component {
 	};
 
 	/**
-	 * Install a ContentBox instance on the current working directory
+	 * Install ContentBox on the current working directory with or without a running CFML Engine
 	 *
 	 * @name The name of the site to build
 	 * @cfmlEngine The CFML engine to bind the installed ContentBox instance to
@@ -52,6 +52,7 @@ component {
 	 * @databasePassword The database password to use for the datasource. Use an empty password if using Hypersonic
 	 * @databaseName The database name to use for the datasource
 	 * @production Are we installing for development or production, default is for development
+	 * @deployServer If true, we will deploy and start the binded server via CommandBox
 	 * @verbose Output much more verbose information about the installation process
 	 **/
 	function run(
@@ -64,17 +65,18 @@ component {
 		databasePort = "",
 		required databaseUsername,
 		required databasePassword,
-		databaseName       = "contentbox",
-		boolean production = false,
-		boolean verbose    = false,
-		contentboxVersion  = static.contentboxVersion
+		databaseName         = "contentbox",
+		boolean production   = false,
+		boolean deployServer = true,
+		boolean verbose      = false,
+		contentboxVersion    = static.contentboxVersion
 	){
 		var installDir = getCWD();
 
 		// Verify Engines
 		if ( !arrayFindNoCase( static.engines, arguments.cfmlEngine ) ) {
 			error(
-				"The cfml engine passed (#arguments.cfmlengine#) is not valid. Valid choices are #static.engines.toString()#"
+				"The CFML engine passed (#arguments.cfmlengine#) is not valid. Valid choices are #static.engines.toString()#"
 			);
 			return;
 		}
@@ -97,6 +99,7 @@ component {
 			.blueLine( "Starting to install ContentBox..." )
 			.line()
 			.toConsole();
+
 		command( "install" )
 			.params(
 				id         = "contentbox-installer@#arguments.contentboxVersion#",
@@ -130,18 +133,22 @@ component {
 				.toConsole();
 		}
 
-		// Seed the right CFML Engine
-		variables.print
-			.blueLine( "Starting to seed the chosen CFML Engine to the server.json..." )
-			.line()
-			.toConsole();
-		command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
-		command( "server set name='#arguments.name#'" ).run();
-		command( "server set openBrowser=false" ).run();
-		variables.print
-			.greenLine( "√ CFML Engine Configured!" )
-			.line()
-			.toConsole();
+		// Seed the right CFML Engine to deploy
+		if ( arguments.deployServer ) {
+			variables.print
+				.blueLine( "Starting to seed the chosen CFML Engine (#arguments.cfmlEngine#) to deploy..." )
+				.line()
+				.toConsole();
+
+			command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
+			command( "server set name='#arguments.name#'" ).run();
+			command( "server set openBrowser=false" ).run();
+
+			variables.print
+				.greenLine( "√ CFML Engine Configured!" )
+				.line()
+				.toConsole();
+		}
 
 		// Create the .env
 		variables.print
@@ -158,12 +165,15 @@ component {
 		// Ask for startup
 		variables.print
 			.greenLine(
-				"ContentBox has been installed and configured. We will now verify your database credentials, install the migrations and then we can continue running the server."
+				"ContentBox has been installed and configured on disk. We will now verify your database credentials, and install the database migrations."
 			)
 			.redBoldLine( "Make sure your database (#arguments.databaseName#) has been created!" )
 			.redBoldLine(
 				"If this process fails, then your database credentials are not correct.  Verify them and make sure they match the ones in the (.env) file we created."
-			);
+			)
+			.redBoldLine( "You don't have to run the installer again if it fails. You can run the following commands to finish your installation:" )
+			.redBoldLine( "- migrate install" )
+			.redBoldLine( "- run-script contentbox:migrate" );
 
 		// Confirm migrations
 		variables.print
@@ -181,30 +191,38 @@ component {
 		command( "migrate up migrationsDirectory=modules/contentbox/migrations" ).run();
 
 		// Confirm starting up the server
-		variables.print
-			.line()
-			.blueLine( "Please wait while we startup your server..." )
-			.toConsole();
-		command( "server start" ).run();
-		sleep( 3000 );
-		variables.print.greenLine( "√ ContentBox server started, check out the details below:" );
-		command( "server info" ).run();
-
-		// Adobe 2021 cfpm installs
-		if ( arguments.cfmlEngine.findNoCase( "adobe@2021" ) ) {
+		if ( arguments.deployServer ) {
 			variables.print
 				.line()
-				.blueLine( "Adobe 2021 detected, running cfpm installs to support ContentBox..." )
+				.blueLine( "Please wait while we startup your CommandBox server..." )
 				.toConsole();
-			command( "cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed" ).run();
-			variables.print.greenLine( "√ CFPM modules installed" );
-			sleep( 1000 );
+			command( "server start" ).run();
+			sleep( 5000 );
+
+			// Adobe 2021 cfpm installs
+			if ( arguments.cfmlEngine.findNoCase( "adobe@2021" ) ) {
+				variables.print
+					.line()
+					.blueLine( "* Adobe 2021 detected, running cfpm installs to support ContentBox..." )
+					.toConsole();
+				command( "cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed" ).run();
+				variables.print.greenLine( "√ CFPM modules installed" );
+				sleep( 5000 );
+			}
+
+			variables.print.greenLine( "√ ContentBox server started, check out the details below:" );
+			command( "server info" ).run();
+
+			variables.print.greenLine( "√ Opening a browser for you to continue with the web installer..." );
+			command( "server open" ).run();
+		} else {
+			variables.print
+				.line()
+				.boldRedLine( "* You did not deploy a server, so you must manually start your (#arguments.cfmlengine#) engine and visit the site so you can continue the web installer portions." )
+				.line();
 		}
 
-		variables.print.greenLine( "√ Opening a browser for you to continue with the web installer..." );
-		command( "server open" ).run();
-
-		variables.print.greenLine( "√ ContentBox CLI Install Wizard is done, enjoy your ContentBox!" );
+		variables.print.greenLine( "√ ContentBox installation is done, enjoy your ContentBox!" );
 	}
 
 	/**
