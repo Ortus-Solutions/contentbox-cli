@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v1.3.1] => 2022-MAR-31
+
+### Fixed
+
+* Boolean.len() failing, switching to len( boolean )
+
+----
+
 ## [v1.3.0] => 2022-MAR-31
 
 ### Added

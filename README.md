@@ -20,7 +20,7 @@ box install contentbox-cli
 
 ## Usage
 
-You can use the cli for many thing like installing ContentBox, creating widgets, themes, and much more.  More importantly, the CLI is the official way to install ContentBox from version 5 forwards.  It is a gargantuan task to be able to maintain more than 4 CFML engines against 4 major databases.
+You can use the CLI for many thing like installing ContentBox, creating widgets, themes, and much more.  More importantly, the CLI is the official way to install ContentBox from version 5 forwards.  It is a gargantuan task to be able to maintain more than 4 CFML engines against 4 major databases.  That's why this CLI was built, to make things easier for installing and working with ContentBox across the board.
 
 ### Installing ContentBox
 
@@ -83,6 +83,7 @@ The `install` command has several arguments you can use in order to install Cont
 - `required databasePassword` - The database connection password
 - `databaseName = "contentbox"` - The name of the database
 - `boolean production = false` - Is this a development site or a production site
+- `boolean deployServer = true` - If true, we will deploy the CFML Engine on CommandBox in the directory you chose for installation. Else, we just prepare everything for you to run the folder within your CFML installation.
 - `boolean verbose = false` - Verbose logging to the cli
 
 The available CFML Engines are:
@@ -110,7 +111,7 @@ Once you run the command, this command will do the following procedures:
 - Create a `box.json` in your root configured with all dependencies and migrations connection information to your database
 - Create a `server.json` in your root configured to your CFML engine of choice.
 - Connect and verify to your database and install the database migrations table
-- Startup the server and run the web gui installer
+- If you chose to deploy the server, we will configure, deploy and startup a CommandBox server with your chosen CFML engine.
 
 That's it, enjoy ContentBox.
 
@@ -145,4 +146,3 @@ I THANK GOD FOR HIS WISDOM FOR THIS PROJECT
 
 [1]: https://github.com/Ortus-Solutions/DocBox/wiki
 [2]: https://github.com/Ortus-Solutions/DocBox
-

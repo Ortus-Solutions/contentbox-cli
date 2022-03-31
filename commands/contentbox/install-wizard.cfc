@@ -157,7 +157,7 @@ component extends="install" {
 			data       = args.reduce( ( results, k, v ) => {
 				results.append( {
 					configuration : k,
-					value         : ( v.len() ? v : "[default]" )
+					value         : ( len( v ) ? v : "[default]" )
 				} );
 				return results;
 			}, [] )
