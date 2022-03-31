@@ -183,13 +183,6 @@ component {
 		sleep( 1000 );
 		command( "migrate install" ).run();
 
-		variables.print
-			.line()
-			.blueLine( "Please wait while we run the initial migrations..." )
-			.toConsole();
-		sleep( 1000 );
-		command( "migrate up migrationsDirectory=modules/contentbox/migrations" ).run();
-
 		// Confirm starting up the server
 		if ( arguments.deployServer ) {
 			variables.print
