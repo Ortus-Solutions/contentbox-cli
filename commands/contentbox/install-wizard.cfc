@@ -112,7 +112,7 @@ component extends="install" {
 			mask = "*"
 		)
 		if ( !args.databasePassword.len() ) {
-			error( "You must enter a username to continue" );
+			error( "You must enter a password to continue" );
 		}
 
 		args.databaseName = ask(
