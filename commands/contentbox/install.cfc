@@ -171,7 +171,9 @@ component {
 			.redBoldLine(
 				"If this process fails, then your database credentials are not correct.  Verify them and make sure they match the ones in the (.env) file we created."
 			)
-			.redBoldLine( "You don't have to run the installer again if it fails. You can run the following commands to finish your installation:" )
+			.redBoldLine(
+				"You don't have to run the installer again if it fails. You can run the following commands to finish your installation:"
+			)
 			.redBoldLine( "- migrate install" )
 			.redBoldLine( "- run-script contentbox:migrate" );
 
@@ -211,7 +213,9 @@ component {
 		} else {
 			variables.print
 				.line()
-				.boldRedLine( "* You did not deploy a server, so you must manually start your (#arguments.cfmlengine#) engine and visit the site so you can continue the web installer portions." )
+				.boldRedLine(
+					"* You did not deploy a server, so you must manually start your (#arguments.cfmlengine#) engine and visit the site so you can continue the web installer portions."
+				)
 				.line();
 		}
 
