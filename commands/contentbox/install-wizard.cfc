@@ -49,14 +49,16 @@ component extends="install" {
 			.ask();
 
 		args.cfmlPassword = ask(
-			"Enter the password for the CFML Engine administrator (Leave empty to use 'contentbox', only if deployed on CommandBox)? "
+			message = "Enter the password for the CFML Engine administrator (Leave empty to use 'contentbox', only if deployed on CommandBox)? ",
+			mask    = "*"
 		);
 		if ( !args.cfmlPassword.len() ) {
 			args.cfmlPassword = "contentbox";
 		}
 
 		args.coldboxPassword = ask(
-			"Enter the password for the ColdBox HMVC Reinits (Leave empty to use 'contentbox')? "
+			message = "Enter the password for the ColdBox HMVC Reinits (Leave empty to use 'contentbox')? ",
+			mask    = "*"
 		);
 		if ( !args.coldboxPassword.len() ) {
 			args.coldboxPassword = "contentbox";
@@ -105,9 +107,12 @@ component extends="install" {
 			error( "You must enter a username to continue" );
 		}
 
-		args.databasePassword = ask( "Enter the database password to use for the connection? " )
+		args.databasePassword = ask(
+			message = "Enter the database password to use for the connection? ",
+			mask    = "*"
+		)
 		if ( !args.databasePassword.len() ) {
-			error( "You must enter a username to continue" );
+			error( "You must enter a password to continue" );
 		}
 
 		args.databaseName = ask(
@@ -118,7 +123,9 @@ component extends="install" {
 		}
 
 		args.deployServer = multiSelect()
-			.setQuestion( "Do you want us to deploy and start a CFML Engine (#args.cfmlEngine#) on CommandBox for you? " )
+			.setQuestion(
+				"Do you want us to deploy and start a CFML Engine (#args.cfmlEngine#) on CommandBox for you? "
+			)
 			.setOptions( [
 				{
 					display  : "Yes",
@@ -157,7 +164,7 @@ component extends="install" {
 			data       = args.reduce( ( results, k, v ) => {
 				results.append( {
 					configuration : k,
-					value         : ( len( v ) ? v : "[default]" )
+					value         : ( len( v ) ? ( findNoCase( "Password", k ) GT 0 ? "***" : v ) : "[default]" )
 				} );
 				return results;
 			}, [] )

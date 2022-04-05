@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ----
 
+## [v1.4.0] => 2022-APR-05
+
+### Fixed
+
+* Fix password error prompts
+
+### Added
+
+* Mask the installer password inputs
+
+----
+
 ## [v1.3.2] => 2022-MAR-31
 
 ### Fixed
