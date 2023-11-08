@@ -108,8 +108,9 @@ component {
 			)
 			.run();
 
+		// ContentBox 5 ONLY, as it uses ORM DDL, 6 uses migrations
 		// MySQL 8 Bug on Lucee
-		if ( arguments.cfmlEngine.findNoCase( "lucee" ) && arguments.databaseType == "MySQL8" ) {
+		if ( arguments.contentboxVersion eq 5 && arguments.cfmlEngine.findNoCase( "lucee" ) && arguments.databaseType == "MySQL8" ) {
 			variables.print
 				.blueLine( "Lucee and MySQL 8 detected, updating Application.cfc due to Lucee ORM DDL Bug..." )
 				.line()
@@ -140,9 +141,12 @@ component {
 				.line()
 				.toConsole();
 
-			command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
 			command( "server set name='#arguments.name#'" ).run();
 			command( "server set openBrowser=false" ).run();
+			command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
+			command( "server set web.rewrites.enable=true" ).run();
+			command( "server set jvm.heapsize=1024" ).run();
+			command( "server set jvm.args=-Dfile.encoding=UTF8 -Dcom.sun.net.ssl.enableECC=false -Dlucee-extensions=D062D72F-F8A2-46F0-8CBC91325B2F067B" ).run();
 
 			variables.print
 				.greenLine( "√ CFML Engine Configured!" )
@@ -183,7 +187,12 @@ component {
 			.blueLine( "Please wait while we install your migrations table..." )
 			.toConsole();
 		sleep( 1000 );
-		command( "migrate install" ).run();
+		command( "migrate install manager='contentbox'" ).run();
+		command( "migrate up manager='contentbox'" ).run();
+
+		// TODO: Are we adding an automatic admin user?
+
+		// TODO: Are we creating the default site?
 
 		// Confirm starting up the server
 		if ( arguments.deployServer ) {
