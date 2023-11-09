@@ -94,7 +94,7 @@ component {
 			return;
 		}
 
-		// Install the installer
+		// Install the ContentBox installer package according to version
 		variables.print
 			.blueLine( "Starting to install ContentBox..." )
 			.line()
@@ -111,62 +111,19 @@ component {
 		// ContentBox 5 ONLY, as it uses ORM DDL, 6 uses migrations
 		// MySQL 8 Bug on Lucee
 		if ( arguments.contentboxVersion eq 5 && arguments.cfmlEngine.findNoCase( "lucee" ) && arguments.databaseType == "MySQL8" ) {
-			variables.print
-				.blueLine( "Lucee and MySQL 8 detected, updating Application.cfc due to Lucee ORM DDL Bug..." )
-				.line()
-				.toConsole();
-			var appCFC = replaceNoCase(
-				fileRead(
-					installDir & "/Application.cfc",
-					"utf-8"
-				),
-				"""update""",
-				"""dropcreate"""
-			);
-			fileWrite(
-				installDir & "/Application.cfc",
-				appCFC,
-				"utf-8"
-			);
-			variables.print
-				.greenLine( "√ Updated Application.cfc with dropcreate for MySQL 8 for initial startup." )
-				.line()
-				.toConsole();
+			contentBox5LuceeBug( installDir);
 		}
 
 		// Seed the right CFML Engine to deploy
 		if ( arguments.deployServer ) {
-			variables.print
-				.blueLine( "Starting to seed the chosen CFML Engine (#arguments.cfmlEngine#) to deploy..." )
-				.line()
-				.toConsole();
-
-			command( "server set name='#arguments.name#'" ).run();
-			command( "server set openBrowser=false" ).run();
-			command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
-			command( "server set web.rewrites.enable=true" ).run();
-			command( "server set jvm.heapsize=1024" ).run();
-			command( "server set jvm.args=-Dfile.encoding=UTF8 -Dcom.sun.net.ssl.enableECC=false -Dlucee-extensions=D062D72F-F8A2-46F0-8CBC91325B2F067B" ).run();
-
-			variables.print
-				.greenLine( "√ CFML Engine Configured!" )
-				.line()
-				.toConsole();
+			createDeployServer( arguments.cfmlEngine, arguments.name );
 		}
 
 		// Create the .env
-		variables.print
-			.blueLine( "Starting to seed the ContentBox runtime environment..." )
-			.line()
-			.toConsole();
 		arguments.installDir = installDir;
 		createEnvironment( argumentCollection = arguments );
-		variables.print
-			.greenLine( "√ ContentBox Environment Configured!" )
-			.line()
-			.toConsole();
 
-		// Ask for startup
+		// Information about the installation just in case connection details are wrong and the user can recover.
 		variables.print
 			.greenLine(
 				"ContentBox has been installed and configured on disk. We will now verify your database credentials, and install the database migrations."
@@ -181,44 +138,12 @@ component {
 			.redBoldLine( "- migrate install" )
 			.redBoldLine( "- run-script contentbox:migrate" );
 
-		// Confirm migrations
-		variables.print
-			.line()
-			.blueLine( "Please wait while we install your migrations table..." )
-			.toConsole();
-		sleep( 1000 );
-		command( "migrate install manager='contentbox'" ).run();
-		command( "migrate up manager='contentbox'" ).run();
-
-		// TODO: Are we adding an automatic admin user?
-
-		// TODO: Are we creating the default site?
+		// Run the migrations
+		runMigrations();
 
 		// Confirm starting up the server
 		if ( arguments.deployServer ) {
-			variables.print
-				.line()
-				.blueLine( "Please wait while we startup your CommandBox server..." )
-				.toConsole();
-			command( "server start" ).run();
-			sleep( 5000 );
-
-			// Adobe 2021 cfpm installs
-			if ( arguments.cfmlEngine.findNoCase( "adobe@2021" ) ) {
-				variables.print
-					.line()
-					.blueLine( "* Adobe 2021 detected, running cfpm installs to support ContentBox..." )
-					.toConsole();
-				command( "cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed" ).run();
-				variables.print.greenLine( "√ CFPM modules installed" );
-				sleep( 5000 );
-			}
-
-			variables.print.greenLine( "√ ContentBox server started, check out the details below:" );
-			command( "server info" ).run();
-
-			variables.print.greenLine( "√ Opening a browser for you to continue with the web installer..." );
-			command( "server open" ).run();
+			startupServer( arguments.cfmlEngine );
 		} else {
 			variables.print
 				.line()
@@ -229,6 +154,91 @@ component {
 		}
 
 		variables.print.greenLine( "√ ContentBox installation is done, enjoy your ContentBox!" );
+	}
+
+	private function runMigrations(){
+		// Confirm migrations
+		variables.print
+			.line()
+			.blueLine( "Please wait while we install your migrations table..." )
+			.toConsole();
+		command( "migrate install manager='contentbox'" ).run();
+		command( "migrate up manager='contentbox'" ).run();
+	}
+
+	private function startupServer( required cfmlEngine ){
+		variables.print
+				.line()
+				.blueLine( "Please wait while we startup your CommandBox server..." )
+				.toConsole();
+			command( "server start" ).run();
+			sleep( 5000 );
+
+			variables.print.greenLine( "√ ContentBox server started, check out the details below:" );
+			command( "server info" ).run();
+
+			variables.print.greenLine( "√ Opening a browser for you to continue with the web installer..." );
+			command( "server open" ).run();
+	}
+
+	/**
+	 * Create the the deploy server.json
+	 *
+	 * @cfmlEngine The CFML engine to bind the installed ContentBox instance to
+	 * @name The name of the site to build
+	 */
+	private function createDeployServer( required cfmlEngine, required name ){
+		variables.print
+			.blueLine( "Starting to seed the chosen CFML Engine (#arguments.cfmlEngine#) to deploy..." )
+			.line()
+			.toConsole();
+
+		command( "server set name='#arguments.name#'" ).run();
+		command( "server set openBrowser=false" ).run();
+		command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
+		command( "server set web.rewrites.enable=true" ).run();
+		command( "server set jvm.heapsize=1024" ).run();
+		command( "server set jvm.args=-Dfile.encoding=UTF8 -Dcom.sun.net.ssl.enableECC=false -Dlucee-extensions=D062D72F-F8A2-46F0-8CBC91325B2F067B" ).run();
+
+		// 2021+ cfpm installs
+		if ( arguments.cfmlEngine.findNoCase( "adobe@202" ) ) {
+			command( "server set scripts.onServerInstall=cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed" ).run();
+		}
+
+		variables.print
+			.greenLine( "√ CFML Engine Configured!" )
+			.line()
+			.toConsole();
+	}
+
+	/**
+	 * This takes care of a Lucee 5 bug on MySQL 8 with ORM drop create and updates.
+	 * This is no longer necessary in ContentBox 6 as we use migrations.
+	 *
+	 * @installDir The directory to the ContentBox installation
+	 */
+	private function contentBox5LuceeBug( required installDir ){
+		variables.print
+			.blueLine( "Lucee and MySQL 8 detected, updating Application.cfc due to Lucee ORM DDL Bug..." )
+			.line()
+			.toConsole();
+		var appCFC = replaceNoCase(
+			fileRead(
+				installDir & "/Application.cfc",
+				"utf-8"
+			),
+			"""update""",
+			"""dropcreate"""
+		);
+		fileWrite(
+			installDir & "/Application.cfc",
+			appCFC,
+			"utf-8"
+		);
+		variables.print
+			.greenLine( "√ Updated Application.cfc with dropcreate for MySQL 8 for initial startup." )
+			.line()
+			.toConsole();
 	}
 
 	/**
@@ -248,6 +258,11 @@ component {
 		required installDir,
 		required production
 	){
+		variables.print
+			.blueLine( "Starting to seed the ContentBox runtime environment..." )
+			.line()
+			.toConsole();
+
 		var env = fileRead( variables.settings.templatesPath & "/.env.template" );
 
 		env = replaceNoCase(
@@ -533,6 +548,11 @@ component {
 			env,
 			"utf-8"
 		);
+
+		variables.print
+			.greenLine( "√ ContentBox Environment Configured!" )
+			.line()
+			.toConsole();
 	}
 
 	function completeEngines(){
