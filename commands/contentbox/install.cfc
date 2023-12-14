@@ -110,8 +110,10 @@ component {
 
 		// ContentBox 5 ONLY, as it uses ORM DDL, 6 uses migrations
 		// MySQL 8 Bug on Lucee
-		if ( arguments.contentboxVersion eq 5 && arguments.cfmlEngine.findNoCase( "lucee" ) && arguments.databaseType == "MySQL8" ) {
-			contentBox5LuceeBug( installDir);
+		if (
+			arguments.contentboxVersion eq 5 && arguments.cfmlEngine.findNoCase( "lucee" ) && arguments.databaseType == "MySQL8"
+		) {
+			contentBox5LuceeBug( installDir );
 		}
 
 		// Seed the right CFML Engine to deploy
@@ -168,17 +170,17 @@ component {
 
 	private function startupServer( required cfmlEngine ){
 		variables.print
-				.line()
-				.blueLine( "Please wait while we startup your CommandBox server..." )
-				.toConsole();
-			command( "server start" ).run();
-			sleep( 5000 );
+			.line()
+			.blueLine( "Please wait while we startup your CommandBox server..." )
+			.toConsole();
+		command( "server start" ).run();
+		sleep( 5000 );
 
-			variables.print.greenLine( "√ ContentBox server started, check out the details below:" );
-			command( "server info" ).run();
+		variables.print.greenLine( "√ ContentBox server started, check out the details below:" );
+		command( "server info" ).run();
 
-			variables.print.greenLine( "√ Opening a browser for you to continue with the web installer..." );
-			command( "server open" ).run();
+		variables.print.greenLine( "√ Opening a browser for you to continue with the web installer..." );
+		command( "server open" ).run();
 	}
 
 	/**

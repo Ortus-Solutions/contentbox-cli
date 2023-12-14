@@ -38,7 +38,7 @@ component {
 		} );
 
 		// Create Project Dependency Mappings
-		//fileSystemUtil.createMapping( "@module_name@", variables.cwd );
+		// fileSystemUtil.createMapping( "@module_name@", variables.cwd );
 
 		return this;
 	}
@@ -299,9 +299,9 @@ component {
 	 */
 	private function ensureExportDir(
 		required projectName,
-		version   = "1.0.0"
+		version = "1.0.0"
 	){
-		if ( structKeyExists( variables, "exportsDir" ) && directoryExists( variables.exportsDir ) ){
+		if ( structKeyExists( variables, "exportsDir" ) && directoryExists( variables.exportsDir ) ) {
 			return;
 		}
 		// Prepare exports directory
