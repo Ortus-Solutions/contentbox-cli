@@ -29,7 +29,6 @@ We have created the `install` and the `install-wizard` commands so you can easil
 #### Suported CFML Engines
 
 - Lucee 5+
-- _Adobe 2016 (End of life December 2021)_
 - Adobe 2018
 - Adobe 2021
 
@@ -144,5 +143,5 @@ I THANK GOD FOR HIS WISDOM FOR THIS PROJECT
 
 "I am the way, and the truth, and the life; no one comes to the Father, but by me (JESUS)" Jn 14:1-12
 
-[1]: https://github.com/Ortus-Solutions/DocBox/wiki
+[1]: https://docbox.ortusbooks.com/
 [2]: https://github.com/Ortus-Solutions/DocBox
