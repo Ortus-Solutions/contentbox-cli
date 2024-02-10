@@ -1,6 +1,6 @@
 {
     "name":"ContentBox CLI",
-    "version":"1.5.1",
+    "version":"1.6.0",
     "location":"https://downloads.ortussolutions.com/ortussolutions/commandbox-modules/contentbox-cli/@build.version@/contentbox-cli-@build.version@.zip",
     "slug":"contentbox-cli",
     "author":"Ortus Solutions, Corp",
