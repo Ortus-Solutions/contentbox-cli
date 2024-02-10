@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+* Updated github actions for consistency
+* `box` binary removed, not sure why it was there in the first place
+
+## [v1.5.0] => 2023-DEC-14
+
 ### Added
 
 * New Migrations approach of ContentBox 6
