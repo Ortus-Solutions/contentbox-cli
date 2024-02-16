@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.2] - 2024-02-16
+
 ### Fixed
 
 - Temporary fix for the ORM extension not being discovered due to lucee bug on jvm args.
@@ -87,6 +89,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Misspelling on database port for Microsoft SQL server.
 - `appcfc` missing variable when updating Lucee + MySQL 8 bug for DDL creation.
 
-[Unreleased]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.5.1...HEAD
+[Unreleased]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.5.2...HEAD
+
+[1.5.2]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.5.1...v1.5.2
 
 [1.5.1]: https://github.com/Ortus-Solutions/contentbox-cli/compare/e199c386dc5d1b262f9259d6824df5fa7dfdd77e...v1.5.1
