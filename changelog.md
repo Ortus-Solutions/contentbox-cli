@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Temporary fix for the ORM extension not being discovered due to lucee bug on jvm args.
+
 ## [1.5.1] - 2024-02-10
 
 ### Fixed
