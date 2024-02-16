@@ -47,9 +47,9 @@ jobs:
       - name: Run Tests
         run: |
           # Create the CommandBox modules folder, for some reason it is not created
-          mkdir -p ~/.CommandBox/cfml/modules
+          mkdir -p ~/.CommandBox/cfml/modules/contentbox-cli
           # Link up the module so we can do testing!
-          box link --force
+          box link
           # Test
           box task run taskfile=build/Build target="runTests"
 
