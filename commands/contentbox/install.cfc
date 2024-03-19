@@ -3,7 +3,7 @@
  *
  * This command is meant to be ran and not expecting user feedback.
  *
- * The supported CFML Engines are "lucee@5", "adobe@2016", "adobe@2018", "adobe@2021"
+ * The supported CFML Engines are "lucee@5", "lucee@6", "adobe@2018", "adobe@2021", "adobe@2023"
  * The supported Databases are: "HyperSonicSQL (Lucee Only)", "MySQL5", "MySQL8", "MicrosoftSQL", "PostgreSQL", "Oracle"
  *
  * .
@@ -20,9 +20,10 @@ component {
 	static {
 		engines = [
 			"lucee@5",
-			"adobe@2016",
+			"lucee@6",
 			"adobe@2018",
-			"adobe@2021"
+			"adobe@2021",
+			"adobe@2023"
 		];
 		databases = [
 			"HyperSonicSQL",
@@ -33,7 +34,7 @@ component {
 			"Oracle"
 		];
 		hypersonicSlug    = "6DD4728A-AB0C-4F67-9DCE1A91A8ACD114";
-		contentboxVersion = "5";
+		contentboxVersion = "6";
 	};
 
 	/**
@@ -359,7 +360,7 @@ component {
 					"DB_CONNECTIONSTRING=jdbc:hsqldb:file:contentboxDB/#arguments.databasename#"
 				);
 				// Setup the jdbc extension
-				command( "server set jvm.args='-Dlucee-extensions=6DD4728A-AB0C-4F67-9DCE1A91A8ACD114'" );
+				command( "server set jvm.args='-Dlucee-extensions=#hypersonicSlug#'" );
 				break;
 			}
 			case "MySQL5": {
@@ -422,7 +423,7 @@ component {
 				env = replaceNoCase(
 					env,
 					"DB_BUNDLEVERSION=",
-					"DB_BUNDLEVERSION=8.0.24"
+					"DB_BUNDLEVERSION=8.1.0"
 				);
 				env = replaceNoCase(
 					env,
@@ -464,7 +465,7 @@ component {
 				env = replaceNoCase(
 					env,
 					"DB_BUNDLEVERSION=",
-					"DB_BUNDLEVERSION=4.0.2206.100"
+					"DB_BUNDLEVERSION=12.4.2.jre11"
 				);
 				env = replaceNoCase(
 					env,

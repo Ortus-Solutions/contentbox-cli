@@ -34,8 +34,9 @@ component extends="install" {
 					selected : true
 				},
 				{
-					display : "Adobe 2016",
-					value   : "adobe@2016"
+					display  : "Lucee 6",
+					value    : "lucee@6",
+					selected : true
 				},
 				{
 					display : "Adobe 2018",
@@ -44,6 +45,10 @@ component extends="install" {
 				{
 					display : "Adobe 2021",
 					value   : "adobe@2021"
+				},
+				{
+					display : "Adobe 2023",
+					value   : "adobe@2023"
 				}
 			] )
 			.ask();
