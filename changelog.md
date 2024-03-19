@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2024-03-19
+
 ### Added
 
 - Adobe 2023 Support
@@ -106,7 +108,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Misspelling on database port for Microsoft SQL server.
 - `appcfc` missing variable when updating Lucee + MySQL 8 bug for DDL creation.
 
-[Unreleased]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.5.2...HEAD
+[Unreleased]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.6.0...HEAD
+
+[1.6.0]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.5.2...v1.6.0
 
 [1.5.2]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.5.1...v1.5.2
 
