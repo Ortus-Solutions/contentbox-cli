@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Adobe 2023 Support
+- Lucee 6 Support
+- Dropped Adobe 2016 since this was deprecated already
+- ContentBox 6 default version
+
+### Updates
+
+- Updated Database Drivers for: MySQL, MSSQL, Hypersonic
+
+### Fixed
+
+- ContentBox 6 was not the default and migrations was not running correctly
+
 ## [1.5.2] - 2024-02-16
 
 ### Fixed
