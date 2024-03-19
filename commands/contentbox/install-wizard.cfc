@@ -33,7 +33,7 @@ component extends="install" {
 					value    : "lucee@5",
 					selected : true
 				},
-                {
+				{
 					display  : "Lucee 6",
 					value    : "lucee@6",
 					selected : true
@@ -46,7 +46,7 @@ component extends="install" {
 					display : "Adobe 2021",
 					value   : "adobe@2021"
 				},
-                {
+				{
 					display : "Adobe 2023",
 					value   : "adobe@2023"
 				}

@@ -20,10 +20,10 @@ component {
 	static {
 		engines = [
 			"lucee@5",
-            "lucee@6",
+			"lucee@6",
 			"adobe@2018",
 			"adobe@2021",
-            "adobe@2023"
+			"adobe@2023"
 		];
 		databases = [
 			"HyperSonicSQL",
