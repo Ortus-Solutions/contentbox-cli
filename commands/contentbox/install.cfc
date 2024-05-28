@@ -206,7 +206,7 @@ component {
 
 		// 2021+ cfpm installs
 		if ( arguments.cfmlEngine.findNoCase( "adobe@202" ) ) {
-			command( "server set scripts.onServerInstall=cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed" ).run();
+			command( "server set scripts.onServerInstall='cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed'" ).run();
 		}
 
 		variables.print
