@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Adobe 2021 support was not working correctly for `onServerInstall` method
+- PostgreSQL jdbc driver update on installer
 
 ## [1.6.0] - 2024-03-19
 
