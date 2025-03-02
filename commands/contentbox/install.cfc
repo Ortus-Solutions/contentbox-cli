@@ -501,12 +501,12 @@ component {
 				env = replaceNoCase(
 					env,
 					"DB_BUNDLENAME=",
-					"DB_BUNDLENAME=org.postgresql.jdbc42"
+					"DB_BUNDLENAME=org.postgresql.jdbc"
 				);
 				env = replaceNoCase(
 					env,
 					"DB_BUNDLEVERSION=",
-					"DB_BUNDLEVERSION=9.4.1212"
+					"DB_BUNDLEVERSION=42.7.4"
 				);
 				env = replaceNoCase(
 					env,
