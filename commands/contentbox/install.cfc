@@ -206,7 +206,7 @@ component {
 
 		// 2021+ cfpm installs
 		if ( arguments.cfmlEngine.findNoCase( "adobe@202" ) ) {
-			command( "server set scripts.onServerInstall=cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed" ).run();
+			command( "server set scripts.onServerInstall='cfpm install zip,orm,mysql,postgresql,sqlserver,document,feed'" ).run();
 		}
 
 		variables.print
@@ -501,12 +501,12 @@ component {
 				env = replaceNoCase(
 					env,
 					"DB_BUNDLENAME=",
-					"DB_BUNDLENAME=org.postgresql.jdbc42"
+					"DB_BUNDLENAME=org.postgresql.jdbc"
 				);
 				env = replaceNoCase(
 					env,
 					"DB_BUNDLEVERSION=",
-					"DB_BUNDLEVERSION=9.4.1212"
+					"DB_BUNDLEVERSION=42.7.4"
 				);
 				env = replaceNoCase(
 					env,
