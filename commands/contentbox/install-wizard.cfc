@@ -36,7 +36,6 @@ component extends="install" {
 				{
 					display  : "Lucee 6",
 					value    : "lucee@6",
-					selected : true
 				},
 				{
 					display : "Adobe 2018",

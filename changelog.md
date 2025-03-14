@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- BoxLang prep
+- Adobe 2025 Support
+
+### Fixed
+
+- Multiple lucee engines selected on the installer wizard
+- Add missing `"commandbox-migrations": "^4.0.0"` dependency
+
 ## [1.7.0] - 2025-03-02
 
 ### Fixed

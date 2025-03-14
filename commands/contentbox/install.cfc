@@ -3,7 +3,7 @@
  *
  * This command is meant to be ran and not expecting user feedback.
  *
- * The supported CFML Engines are "lucee@5", "lucee@6", "adobe@2018", "adobe@2021", "adobe@2023"
+ * The supported CFML Engines are "boxlang@1", "lucee@5", "lucee@6", "adobe@2021", "adobe@2023", "adobe@2025"
  * The supported Databases are: "HyperSonicSQL (Lucee Only)", "MySQL5", "MySQL8", "MicrosoftSQL", "PostgreSQL", "Oracle"
  *
  * .
@@ -19,11 +19,12 @@ component {
 
 	static {
 		engines = [
+			"boxlang",
 			"lucee@5",
 			"lucee@6",
-			"adobe@2018",
 			"adobe@2021",
-			"adobe@2023"
+			"adobe@2023",
+			"adobe@2025"
 		];
 		databases = [
 			"HyperSonicSQL",

@@ -12,7 +12,6 @@ component {
 
 	function configure(){
 		settings = { templatesPath : modulePath & "/templates" }
-
 		interceptors = []
 	}
 
