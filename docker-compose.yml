@@ -1,5 +1,5 @@
 services:
-  db:
+  postgresql:
     image: postgres:14
     container_name: postgres14
     environment:
@@ -11,5 +11,19 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  mysql:
+    image: mysql:8
+    container_name: mysql8
+    environment:
+      MYSQL_ROOT_PASSWORD: ortussolutions
+      MYSQL_DATABASE: contentbox
+      MYSQL_USER: root
+      MYSQL_PASSWORD: ortussolutions
+    ports:
+      - "43306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
 volumes:
   postgres_data:
+  mysql_data:
