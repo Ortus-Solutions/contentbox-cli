@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:14
+    container_name: postgres14
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: ortussolutions
+      POSTGRES_DB: contentbox
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
