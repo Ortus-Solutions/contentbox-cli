@@ -1,6 +1,6 @@
 {
     "name":"ContentBox CLI",
-    "version":"1.8.0",
+    "version":"1.9.0",
     "location":"https://downloads.ortussolutions.com/ortussolutions/commandbox-modules/contentbox-cli/@build.version@/contentbox-cli-@build.version@.zip",
     "slug":"contentbox-cli",
     "author":"Ortus Solutions, Corp",
@@ -27,8 +27,8 @@
         "commandbox-docbox":"*"
     },
     "dependencies":{
-		"commandbox-migrations": "^5.0.0"
-	},
+        "commandbox-migrations":"^5.0.0"
+    },
     "installPaths":{},
     "scripts":{
         "release":"recipe build/release.boxr",
