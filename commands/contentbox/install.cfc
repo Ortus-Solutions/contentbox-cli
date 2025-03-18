@@ -140,7 +140,7 @@ component {
 				"You don't have to run the installer again if it fails. You can run the following commands to finish your installation:"
 			)
 			.redBoldLine( "- migrate install manager='contentbox'" )
-			.redBoldLine( "- migrate up manager='contentbox" );
+			.redBoldLine( "- migrate up manager='contentbox'" );
 
 		// Run the migrations
 		runMigrations();
