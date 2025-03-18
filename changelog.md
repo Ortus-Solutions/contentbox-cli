@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2025-03-18
+
 ### Added
 
 - BoxLang prep
@@ -125,7 +127,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Misspelling on database port for Microsoft SQL server.
 - `appcfc` missing variable when updating Lucee + MySQL 8 bug for DDL creation.
 
-[Unreleased]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.8.0...HEAD
+
+[1.8.0]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.7.0...v1.8.0
 
 [1.7.0]: https://github.com/Ortus-Solutions/contentbox-cli/compare/v1.6.0...v1.7.0
 
