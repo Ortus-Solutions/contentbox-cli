@@ -140,7 +140,7 @@ component {
 				"You don't have to run the installer again if it fails. You can run the following commands to finish your installation:"
 			)
 			.redBoldLine( "- migrate install manager='contentbox'" )
-			.redBoldLine( "- migrate up manager='contentbox" );
+			.redBoldLine( "- migrate up manager='contentbox'" );
 
 		// Run the migrations
 		runMigrations();
@@ -202,7 +202,7 @@ component {
 		command( "server set app.cfengine=#arguments.cfmlEngine#" ).run();
 		command( "server set web.rewrites.enable=true" ).run();
 		command( "server set jvm.heapsize=768" ).run();
-		command( "server set jvm.args='-Dfile.encoding=UTF8 -Dcom.sun.net.ssl.enableECC=false'" ).run();
+		command( "server set jvm.args='-Dcom.sun.net.ssl.enableECC=false'" ).run();
 		command( "server set env.LUCEE-EXTENSIONS='D062D72F-F8A2-46F0-8CBC91325B2F067B'" ).run();
 
 		// 2021+ cfpm installs
