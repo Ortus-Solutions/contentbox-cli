@@ -11,7 +11,7 @@ component {
 	this.modelNamespace = "contentbox-cli"
 
 	function configure(){
-		variables.settings     = { templatesPath : modulePath & "/templates" }
+		variables.settings     = { templatesPath  : modulePath & "/templates" }
 		variables.interceptors = []
 	}
 
