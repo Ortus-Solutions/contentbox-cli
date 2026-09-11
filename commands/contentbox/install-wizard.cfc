@@ -92,7 +92,10 @@ component extends="install" {
 					display : "PostgreSQL",
 					value   : "PostgreSQL"
 				},
-				{ display : "Oracle", value : "Oracle" }
+				{
+					display : "Oracle",
+					value   : "Oracle"
+				}
 			] )
 			.ask();
 
@@ -136,7 +139,7 @@ component extends="install" {
 					value    : true,
 					selected : true
 				},
-				{ display : "False", value : false }
+				{ display  : "False", value  : false }
 			] )
 			.ask();
 

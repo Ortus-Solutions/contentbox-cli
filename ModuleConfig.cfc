@@ -7,12 +7,12 @@
  */
 component {
 
-	this.cfmapping      = "contentbox-cli";
-	this.modelNamespace = "contentbox-cli";
+	this.cfmapping      = "contentbox-cli"
+	this.modelNamespace = "contentbox-cli"
 
 	function configure(){
-		settings     = { templatesPath : modulePath & "/templates" }
-		interceptors = []
+		variables.settings     = { templatesPath  : modulePath & "/templates" }
+		variables.interceptors = []
 	}
 
 	function onLoad(){
