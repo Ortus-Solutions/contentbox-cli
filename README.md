@@ -143,5 +143,3 @@ I THANK GOD FOR HIS WISDOM FOR THIS PROJECT
 
 "I am the way, and the truth, and the life; no one comes to the Father, but by me (JESUS)" Jn 14:1-12
 
-[1]: https://docbox.ortusbooks.com/
-[2]: https://github.com/Ortus-Solutions/DocBox
