@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Agent skills
+- New CommandBox Migrations and CommandBox BoxLang support
+- Repository-specific AI coding instructions
+
 ## [1.9.0] - 2025-06-16
 
 ### Changed

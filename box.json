@@ -27,7 +27,8 @@
         "commandbox-docbox":"*"
     },
     "dependencies":{
-        "commandbox-migrations":"^5.0.0"
+		"commandbox-boxlang":"*",
+        "commandbox-migrations":"*"
     },
     "installPaths":{},
     "scripts":{
